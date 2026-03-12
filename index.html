@@ -149,6 +149,11 @@ button:hover{
     background:#3a3a3a;
     color: white;
 }
+#plant{
+    font-size:60px;
+    margin:20px 0;
+    transition: transform 1s ease;
+}
 </style>
 </head>
 
@@ -157,6 +162,7 @@ button:hover{
     <div class="card">
     
     <h1>Study Timer</h1>
+    <div id="plant">🌱</div>
     <div id="timer">45<span class="colon">:</span>00</div>
     
     <button class="start" onclick="startTimer()">Start</button>
@@ -171,6 +177,7 @@ button:hover{
 
 <script>
 
+let plantStages = ["🌱","🌿","🌳"];
 
 let time = 2700; 
 let timer;
@@ -198,6 +205,18 @@ function startTimer(){
     timer = setInterval(function(){
 
         time--;
+        let progress = (2700 - time) / 2700;
+
+let plant = document.getElementById("plant");
+
+plant.style.transform = "scale(" + (1 + progress*0.8) + ")";
+
+if(progress > 0.66){
+    plant.innerText = plantStages[2];
+}
+else if(progress > 0.33){
+    plant.innerText = plantStages[1];
+}
 
         updateDisplay();
 
@@ -208,6 +227,8 @@ function startTimer(){
             sessions++;
 
             document.getElementById("count").innerText = sessions;
+
+            confettiBurst();
 
             alert("Great job! Time for a 10 minute break.");
 
@@ -241,9 +262,38 @@ updateDisplay();
 running = false;
 
 document.getElementById("timer").classList.remove("running");
+document.getElementById("plant").innerText = "🌱";
 }
 function toggleDarkMode(){
     document.body.classList.toggle("dark");
+}
+
+function confettiBurst(){
+
+for(let i=0;i<80;i++){
+
+let confetti = document.createElement("div");
+
+confetti.style.position="fixed";
+confetti.style.width="8px";
+confetti.style.height="8px";
+confetti.style.background="hsl(" + Math.random()*360 + ",80%,60%)";
+confetti.style.top="-10px";
+confetti.style.left=Math.random()*window.innerWidth + "px";
+
+confetti.style.transition="transform 2s linear";
+
+document.body.appendChild(confetti);
+
+setTimeout(()=>{
+confetti.style.transform="translateY(100vh) rotate(720deg)";
+},10);
+
+setTimeout(()=>{
+confetti.remove();
+},2000);
+
+}
 }
 </script>
 <button id="darkToggle" onclick="toggleDarkMode()">🌙</button>
